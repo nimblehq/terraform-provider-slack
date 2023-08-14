@@ -17,6 +17,13 @@ tools: download
 	@echo "==> Installing tools from tools.go"
 	@go list -f '{{range .Imports}}{{.}} {{end}}' tools.go | xargs go install
 
+install-dependencies:
+	@echo "==> Installing dependencies"
+	@go install github.com/bflad/tfproviderdocs
+	@go install github.com/katbyte/terrafmt
+	@go install github.com/ysmood/golangci-lint
+	@go mod tidy
+
 lint: tools vet docs
 	@echo "==> Checking source code against linters..."
 	golangci-lint run -v
@@ -66,4 +73,4 @@ docscheck:
 		-allowed-resource-subcategories-file docs/allowed-subcategories.txt \
 		-require-resource-subcategory
 
-.PHONY: build download tools lint sweep test testacc vet depscheck docs docs-lint docs-lint-fix docscheck
+.PHONY: build download tools install-dependencies lint sweep test testacc vet depscheck docs docs-lint docs-lint-fix docscheck
